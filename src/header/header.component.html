@@ -8,11 +8,9 @@
         </div>
 
         <!-- Navigation Links -->
-        <div class="hidden sm:flex gap-6 font-medium text-white">
-          <a routerLink="/" routerLinkActive="text-blue-600" class="hover:text-blue-500 transition">Home</a>
-          <a routerLink="/dashboard" routerLinkActive="text-blue-600" class="hover:text-blue-500 transition">Dashboard</a>
-          <a routerLink="/about" routerLinkActive="text-blue-600" class="hover:text-blue-500 transition">About</a>
-          <a routerLink="/login" routerLinkActive="text-blue-600" class="hover:text-blue-500 transition">Login</a>
+        <div class="hidden sm:flex gap-6 font-medium text-white h-full">
+          <a routerLink="/" routerLinkActive="text-blue-600" [routerLinkActiveOptions]="{exact: true}" class="hover:text-blue-500 h-full w-full flex items-center px-2 transition cursor-pointer">Dashboard</a>
+          <a routerLink="/login" routerLinkActive="text-blue-600" [routerLinkActiveOptions]="{exact: true}" class="hover:text-blue-500 h-full w-full flex items-center px-2 transition cursor-pointer">Login</a>
         </div>
 
         <!-- Mobile Menu Button -->
@@ -45,20 +43,16 @@
             <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
           </svg>
         </button>
-
-
       </div>
     </div>
   </header>
 
-  <div   [ngClass]="{
+  <div [ngClass]="{
                       'max-h-0 opacity-0 overflow-hidden': !isOpenMobile,
                       'max-h-96 opacity-100': isOpenMobile
                     }"
     class="flex absolute top-16 md:hidden w-full font-semibold flex-col gap-2 text-lg items-center bg-gray-900 bg-opacity-90 text-white p-2 transition-all duration-1000 ease-in-out">
-    <a routerLink="/" routerLinkActive="text-blue-600" class="hover:text-blue-500 transition">Home</a>
     <a routerLink="/dashboard" routerLinkActive="text-blue-600" class="hover:text-blue-500 transition">Dashboard</a>
-    <a routerLink="/about" routerLinkActive="text-blue-600" class="hover:text-blue-500 transition">About</a>
     <a routerLink="/login" routerLinkActive="text-blue-600" class="hover:text-blue-500 transition">Login</a>
   </div>
 
