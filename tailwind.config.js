@@ -4,7 +4,12 @@ module.exports = {
     './src/**/*.{html,ts}',
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        pacifico: ['Pacifico', 'cursive'],
+        poppins: ['Poppins', 'sans-serif'],
+      }
+    },
   },
   plugins: [],
 }
