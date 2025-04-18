@@ -1,20 +1,20 @@
 <section class="h-full h-full flex justify-center items-center">
     <div class="max-w-md w-full rounded shadow-md bg-white">
-        <form class="grid h-full gap-6 p-4" [formGroup]="ngForm">
-            <p class="font-bold text-3xl text-center">Login</p>
-            <div class="grid gap-2">
+        <form #reactiveForm=ngForm (ngSubmit)="handleSubmit()" class="grid h-full gap-6 p-4" [formGroup]="myForm">
+            <p class="font-bold text-2xl lg:text-3xl text-center">Login</p>
+            <div class="grid gap-2" [ngClass]="myForm.invalid ? 'border-red-500': ''">
                 <label for="gmail">Gmail</label>
-                <input id="gmail" class="border rounded p-2 outline-none focus:border-blue-400" formControlName="gmail" type="text" value="" email placeholder="Enter your email..."/>
+                <input id="gmail" class="border rounded p-2 outline-none border-blue-300 focus-within:border-blue-600 " formControlName="gmail" type="text" value="" email placeholder="Enter your email..."/>
             </div>
             <div class="grid gap-2">
                 <label for="password">Password</label>
-                <div class="border rounded focus-within:border-blue-400 flex items-center justify-between px-1">
-                    <input id="password" formControlName="password" class="p-2 outline-none"  [type]="showPassword ? 'text' : 'password'" value="" placeholder="Enter your passwrod..."/>
+                <div class="border rounded border-blue-300 focus-within:border-blue-600  flex items-center justify-between px-1" [ngClass]="(myForm.get('password')?.invalid && myForm.get('password')?.touched ) ? 'border-red-500': ''" >
+                    <input id="password"  class="p-2 outline-none w-full" formControlName="password" [type]="showPassword ? 'text' : 'password'" value="" placeholder="Enter your passwrod..."/>
                     <i *ngIf="!showPassword" (click)="togglePassword()" class="fas flex fa-eye cursor-pointer text-gray-600 hover:text-black"></i>
                     <i *ngIf="showPassword" (click)="togglePassword()" class="fas fa-eye-slash cursor-pointer text-gray-600 hover:text-black"></i>
                 </div>
             </div>
-            <button class="p-2 flex items-center justify-center hover:bg-green-800 font-semibold cursor-pointer text-white rounded bg-green-700">Login</button>
+            <button [disabled]="myForm.invalid" type="submit" class="p-2 disabled:bg-gray-400 flex items-center justify-center hover:bg-green-800 font-semibold cursor-pointer text-white rounded bg-green-700">Login</button>
         </form>
     </div>
 </section>

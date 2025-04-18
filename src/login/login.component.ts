@@ -14,17 +14,20 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 })
 export class LoginComponent {
   showPassword: boolean = false;
-  ngForm!: FormGroup;
+  myForm!: FormGroup;
 
   ngOnInit(): void {
-    this.ngForm = new FormGroup({
+    this.myForm = new FormGroup({
       gmail: new FormControl("", Validators.required),
       password: new FormControl("", [Validators.required, Validators.minLength(8)])
-      
     })
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
-    
+
+  }
+
+  handleSubmit() {
+    console.log(this.myForm.value);
   }
 
   togglePassword() {

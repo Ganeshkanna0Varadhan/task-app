@@ -7,3 +7,7 @@ body {
     user-select: none;
 }
 
+.ng-invalid.ng-touched {
+  @apply border-red-500
+}
+
