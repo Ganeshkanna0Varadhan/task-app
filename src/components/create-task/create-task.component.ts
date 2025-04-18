@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Task } from '../../models/Task';
 
 @Component({
   selector: 'app-create-task',
@@ -13,6 +14,8 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 })
 export class CreateTaskComponent {
   myForm!: FormGroup;
+  @Output() close: EventEmitter<any> = new EventEmitter<any>();
+  @Output() createTask: EventEmitter<Task> = new EventEmitter<Task>();
 
   ngOnInit() {
     this.myForm = new FormGroup({
@@ -22,9 +25,23 @@ export class CreateTaskComponent {
       createdAt: new FormControl(null, Validators.required),
       priority: new FormControl(null, Validators.required),
       status: new FormControl(null, Validators.required),
-    })
+    });
+
+    console.log(this.close);
   }
   handleSubmit() {
-
+    this.createTask.emit(this.myForm.value);
+    this.myForm.reset();
+    this.close.emit();
   }
+
+  closeMenu() {
+    this.close?.emit();
+  }
+
+  ngOnDestroy(): void {
+    this.close.unsubscribe();
+  }
+
+
 }

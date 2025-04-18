@@ -1,1 +1,52 @@
-<p>edit-task works!</p>
+<div class="absolute w-full flex items-center justify-center h-full bottom-0 z-50 right-0 top-0 left-0 bg-gray-900 bg-opacity-90">
+    <div class="w-full max-w-md  h-full max-h-[90vh] rounded bg-white overflow-y-auto">
+      <div class="flex items-center justify-between shadow-md p-2 sticky bg-white top-0 z-70">
+        <p class="font-bold text-lg">Update Task</p>
+        <i (click)="closeMenu()" class="fas cursor-pointer fa-close text-xl"></i>
+      </div>
+      <div class="grid px-4 py-3">
+        <form class="grid gap-2" (ngSubmit)="handleSubmit()" [formGroup]="myForm">
+          <div class="grid gap-1">
+            <label for="title">Title<span class="text-red-500">*</span> </label>
+            <input id="title" class="p-2 border outline-none rounded bg-blue-50 border-blue-300" type="text" formControlName="title" value="" placeholder="Enter a title">
+          </div>
+          <div  class="grid gap-1">
+            <label for="description" for="">Description<span class="text-red-500">*</span></label>
+            <textarea  id="description"  rows="4" class="p-2 resize-none row-auto border outline-none text-wrap rounded bg-blue-50 border-blue-300" type="text" formControlName="description" value="" placeholder="Enter a description">
+            </textarea>
+          </div>
+          <div class="grid gap-1 w-full">
+            <label for="assigne">Assigned To<span class="text-red-500">*</span></label>
+            <input id="assigne" class="p-2 border outline-none rounded bg-blue-50 border-blue-300" type="text" formControlName="assignedTo" value="" placeholder="Enter a title">
+          </div>
+          <div class="grid gap-1 w-full">
+            <label for="createdat">created At<span class="text-red-500">*</span></label>
+            <input id="createdat" class="p-2 border outline-none rounded bg-blue-50 border-blue-300" type="date" formControlName="createdAt" value="" placeholder="Enter a title">
+          </div>
+          <div class="grid gap-1 w-full">
+            <label for="priority">Priority<span class="text-red-500">*</span></label>
+            <select id="priority" value="" class="p-2 border outline-none rounded bg-blue-50 border-blue-300"  formControlName="priority">
+                <option disabled [defaultSelected]="true" class="" >--Select Priority--</option>
+                <option>Low</option>
+                <option>Medium</option>
+                <option>High</option>
+                <option>Critical</option>
+            </select>
+          </div>
+          <div class="grid gap-1 w-full">
+            <label for="status">Status<span class="text-red-500">*</span></label>
+            <select id="status" value="" class="p-2 border outline-none rounded bg-blue-50 border-blue-300"  formControlName="status">
+              <option disabled [defaultSelected]="true" class="" >--Select status--</option>
+              <option>Open</option>
+              <option>Started</option>
+              <option>In Progress</option>
+              <option>Complete</option>
+            </select>
+          </div>
+          <div class="grid mt-1 w-full">
+            <button [disabled]="myForm.invalid" class="bg-green-700 rounded disabled:bg-gray-400 cursor-pointer font-semibold hover:bg-green-800 text-white p-2">Submit</button>
+          </div>
+        </form>
+      </div>
+    </div>
+</div>
