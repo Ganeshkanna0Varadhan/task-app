@@ -27,7 +27,6 @@ export class CreateTaskComponent {
       status: new FormControl(null, Validators.required),
     });
 
-    console.log(this.close);
   }
   handleSubmit() {
     this.createTask.emit(this.myForm.value);

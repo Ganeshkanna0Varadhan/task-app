@@ -1,3 +1,99 @@
-<div class="max-w-xs min-h-80 max-h-82 bg-blue-300 rounded animate-pulse">
+<div *ngIf="task.id" class="w-full max-w-md mx-auto bg-white rounded-2xl shadow-lg overflow-hidden transition-transform hover:scale-[1.01] hover:shadow-xl">
 
+  <!-- Header Section -->
+  <div class="bg-gradient-to-r from-green-400 to-green-600 p-3 rounded-t-2xl">
+    <h2 class="text-white font-bold text-xl">📌 Task Details</h2>
+  </div>
+
+  <!-- Body Section with Fixed Height -->
+  <div class="p-5 space-y-4 h-[350px] flex flex-col justify-between">
+
+    <!-- Task Title -->
+    <h3 class="text-2xl font-semibold text-blue-700 truncate border-b border-gray-200 pb-2">
+      {{ task.title }}
+    </h3>
+
+    <!-- Assigned To Section -->
+    <div class="flex items-center gap-3">
+      <div class="w-10 h-10 bg-blue-100 text-blue-700 rounded-full flex items-center justify-center font-semibold uppercase">
+        {{ task.assignedTo[0] || '?' }}
+      </div>
+      <div>
+        <p class="text-sm font-medium text-gray-500">Assigned To</p>
+        <p class="text-base text-gray-800">{{ task.assignedTo }}</p>
+      </div>
+    </div>
+
+    <!-- Description Section with 2-line Ellipsis -->
+    <div class="flex-1">
+      <p class="text-sm font-medium text-gray-500 mb-1">Description</p>
+      <p class="text-gray-700" style="display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; text-overflow: ellipsis;">
+        {{ task.description }}
+      </p>
+    </div>
+
+    <!-- Priority and Status Section -->
+    <div class="flex flex-wrap items-center gap-4">
+      <div>
+        <p class="text-sm font-medium text-gray-500 mb-1">Priority</p>
+        <span [ngClass]="{
+          'bg-red-100 text-red-600': task.priority === 'High',
+          'bg-red-300 text-red-700': task.priority === 'Critical',
+          'bg-yellow-100 text-yellow-600': task.priority === 'Medium',
+          'bg-green-100 text-green-600': task.priority === 'Low'
+        }" class="px-3 py-1 rounded-full text-sm font-semibold">
+          {{ task.priority }}
+        </span>
+      </div>
+
+      <div>
+        <p class="text-sm font-medium text-gray-500 mb-1">Status</p>
+        <span class="px-3 py-1 rounded-full bg-gray-100 text-gray-700 text-sm font-semibold">
+          {{ task.status }}
+        </span>
+      </div>
+    </div>
+
+    <!-- Created At Section -->
+    <div>
+      <p class="text-sm font-medium text-gray-500 mb-1">Created At</p>
+      <p class="text-gray-800">{{ task.createdAt | date: 'mediumDate' }}</p>
+    </div>
+  </div>
+
+  <!-- Footer with Font Awesome Icons for View, Edit, and Delete -->
+  <div class="flex justify-between items-center p-4 bg-gray-50 border-t border-gray-200">
+    <!-- View Icon -->
+    <button (click)="viewTask(task.id)"  class="text-blue-600 hover:text-blue-800">
+      <i class="fas fa-eye w-6 h-6"></i>
+    </button>
+
+    <!-- Edit Icon -->
+    <button (click)="editTask(task.id)"  class="text-yellow-600 hover:text-yellow-800">
+      <i class="fas fa-edit w-6 h-6"></i>
+    </button>
+
+    <!-- Delete Icon -->
+    <button (click)="deleteTask(task.id)"  class="text-red-600 hover:text-red-800">
+      <i class="fas fa-trash-alt w-6 h-6"></i>
+    </button>
+  </div>
 </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

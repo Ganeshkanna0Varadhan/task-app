@@ -14,6 +14,7 @@ export class EditTaskComponent {
   myForm!: FormGroup;
   @Input() updateData: any = {};
   @Output() close: EventEmitter<any> = new EventEmitter<any>();
+  @Output() update: EventEmitter<{id: string, value: any }> = new EventEmitter<{id: string, value: any }>();
 
   ngOnInit() {
     this.myForm = new FormGroup({
@@ -25,7 +26,6 @@ export class EditTaskComponent {
       status: new FormControl(null, Validators.required),
     });
 
-    console.log(this.close);
   }
 
   ngAfterViewInit(): void {
@@ -37,12 +37,14 @@ export class EditTaskComponent {
       priority: this.updateData.priority,
       status: this.updateData.status,
     })
-    
+
   }
 
 
   handleSubmit() {
-    console.log(this.myForm);
+    this.update.emit({id: this.updateData.id, value: this.myForm.value });
+    this.myForm.reset();
+    this.close.emit();
   }
 
   closeMenu() {

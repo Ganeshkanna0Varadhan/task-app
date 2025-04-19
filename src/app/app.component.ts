@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { HeaderComponent } from '../header/header.component';
 import { FooterComponent } from '../footer/footer.component';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -15,5 +16,10 @@ import { FooterComponent } from '../footer/footer.component';
   styleUrl: './app.component.css'
 })
 export class AppComponent {
+  authService = inject(AuthService);
   title = 'task-app';
+
+  ngOnInit() {
+    this.authService.autoLogin();
+  }
 }

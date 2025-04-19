@@ -1,4 +1,4 @@
-<section class="h-full h-full flex justify-center items-center">
+<!-- <section class="w-full h-full flex justify-center items-center">
     <div class="max-w-md w-full rounded shadow-md bg-white">
         <form #reactiveForm=ngForm (ngSubmit)="handleSubmit()" class="grid h-full gap-6 p-4" [formGroup]="myForm">
             <p class="font-bold text-2xl lg:text-3xl text-center">Login</p>
@@ -17,4 +17,78 @@
             <button [disabled]="myForm.invalid" type="submit" class="p-2 disabled:bg-gray-400 flex items-center justify-center hover:bg-green-800 font-semibold cursor-pointer text-white rounded bg-green-700">Login</button>
         </form>
     </div>
+</section> -->
+<section class="w-full h-full flex items-center justify-center bg-gray-100 px-4">
+  <div class="w-full max-w-md bg-white rounded-xl shadow-xl p-6 space-y-6">
+
+    <div class="text-center">
+      <h2 class="text-2xl md:text-3xl font-bold text-gray-800">
+        {{ isLoginMode ? 'Welcome Back 👋' : 'Create an Account 🎉' }}
+      </h2>
+      <p class="text-sm text-gray-500 mt-1">
+        {{ isLoginMode ? "We're glad to see you again!" : "Join us and get started!" }}
+      </p>
+    </div>
+
+
+    <form [formGroup]="myForm" (ngSubmit)="handleSubmit()" class="space-y-5">
+
+      <!-- Email Input -->
+      <div>
+        <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+        <input
+          id="email"
+          type="email"
+          email
+          placeholder="you@example.com"
+          formControlName="email"
+          class="mt-1 block w-full px-4 py-3 rounded-lg border border-gray-300 shadow-sm focus:ring-1 focus:ring-blue-500 focus:outline-none text-gray-800"
+        />
+        <div *ngIf="myForm.get('email')?.invalid && myForm.get('email')?.touched" class="text-sm text-red-500 mt-1">
+          Please enter a valid email.
+        </div>
+      </div>
+
+      <!-- Password Input -->
+      <div>
+        <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+        <div class="relative mt-1">
+          <input
+            id="password"
+            [type]="showPassword ? 'text' : 'password'"
+            placeholder="••••••••"
+            formControlName="password"
+            class="w-full px-4 py-3 rounded-lg border border-gray-300 shadow-sm focus:ring-1 focus:ring-blue-500 focus:outline-none text-gray-800"
+          />
+          <i
+            class="fas absolute right-3 top-3.5 text-gray-500 hover:text-blue-700 cursor-pointer"
+            [ngClass]="showPassword ? 'fa-eye-slash' : 'fa-eye'"
+            (click)="togglePassword()"
+          ></i>
+        </div>
+        <div *ngIf="myForm.get('password')?.invalid && myForm.get('password')?.touched" class="text-sm text-red-500 mt-1">
+          Password is required.
+        </div>
+      </div>
+
+      <!-- Submit Button -->
+      <button
+        type="submit"
+        [disabled]="myForm.invalid"
+        class="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition duration-200 shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
+      >
+        {{ isLoginMode ? 'Login' : 'Sign Up'}}
+      </button>
+    </form>
+    <div  class="text-center text-sm text-gray-500">
+      {{ isLoginMode ? "Don’t have an account?" : "Already have an account?"}}
+      <button (click)="toggleLoginMode()" class="text-blue-600 hover:underline font-medium">{{ isLoginMode ? "Register" : "Login"}}</button>
+    </div>
+  </div>
+
+  <app-loading-spinner *ngIf="loading"></app-loading-spinner>
 </section>
+<app-snackbar [message]="errorMessage" *ngIf="errorMessage" ></app-snackbar>
+
+
+

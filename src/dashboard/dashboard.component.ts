@@ -6,8 +6,11 @@ import { DeleteTaskComponent } from '../components/delete-task/delete-task.compo
 import { EditTaskComponent } from '../components/edit-task/edit-task.component';
 import { Task } from '../models/Task';
 import { TaskService } from '../services/task.service';
-import { HttpClientModule } from '@angular/common/http';
-import { finalize } from 'rxjs';
+import { HttpClientModule, HttpErrorResponse } from '@angular/common/http';
+import { catchError, finalize, map, tap, throwError } from 'rxjs';
+import { ViewTaskComponent } from '../components/view-task/view-task.component';
+import { LoadingSpinnerComponent } from '../components/loading-spinner/loading-spinner.component';
+import { SnackbarComponent } from '../components/snackbar/snackbar.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -18,6 +21,9 @@ import { finalize } from 'rxjs';
     CreateTaskComponent,
     DeleteTaskComponent,
     EditTaskComponent,
+    ViewTaskComponent,
+    LoadingSpinnerComponent,
+    SnackbarComponent
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css'
@@ -29,26 +35,73 @@ export class DashboardComponent {
   viewTask: boolean = false;
   updateTask: boolean = false;
   loading: boolean = false;
-  editedData = {};
+  spinnerLoading: boolean = false;
+  errorMessage = '';
+  selectedData!: Task;
   taskService = inject(TaskService);
+  taskList: Task[] = [];
 
   ngOnInit(): void {
-    this.loading = true;
-    this.taskService.fetchAlltasks().pipe(finalize(() => {
-      this.loading = false;
-    })).subscribe({
-      next: (data: any) => {
-        console.log("data", data);
-      },
-      error: (err) => {
-        console.log(err);
-      }        
-    });
-    
+    this.fetchAllTask();
   }
 
   manageCreateTask() {
     this.createTask = !this.createTask;
+  }
+
+  fetchAllTask() {
+    this.loading = true;
+    this.taskList = [];
+    this.taskService.fetchAlltasks().pipe(map((data: any) => {
+      let taskList = []
+      for (let key of Object.keys(data)) {
+        taskList.push(new Task(key, data[key].title, data[key].description, data[key].assignedTo , data[key].createdAt, data[key].priority, data[key].status));
+      }
+      return taskList;
+    }) ,finalize(() => {
+      this.loading = false;
+    }), catchError((err) => {
+      this.setErroMessage(err);
+      return throwError(() => err);
+    })).subscribe({
+      next: (data: any) => {
+        this.taskList = data;
+      },
+      error: (err) => {
+        console.log(err);
+      }
+    });
+  }
+
+  mangeOpeation(data : {type: number, id: string}) {
+    let selectedTask;
+    switch(data.type) {
+      case 1:
+        this.manageViewTask();
+        selectedTask = this.getSelectedData(data.id);
+        if (!selectedTask) return
+        this.selectedData = selectedTask;
+        break;
+      case 2:
+        this.mangeUpdateTask();
+        selectedTask = this.getSelectedData(data.id);
+        if (!selectedTask) return
+        this.selectedData = selectedTask;
+        break;
+      case 3:
+        this.manageDelete();
+        selectedTask = this.getSelectedData(data.id);
+        if (!selectedTask) return
+        this.selectedData = selectedTask;
+        break
+    }
+  }
+
+  getSelectedData(id: string) {
+    let findTask = this.taskList.find((obj ) => obj.id === id) as Task;
+    if (!findTask) return;
+    this.selectedData = findTask;
+    return this.selectedData;
   }
 
   manageDelete() {
@@ -59,23 +112,79 @@ export class DashboardComponent {
     this.viewTask = !this.viewTask;
   }
 
+
   mangeUpdateTask() {
     this.updateTask = !this.updateTask;
   }
 
-  handleDeleteTask() {
-    console.log("this.deleteTask");
-  }
+  handleDeleteTask(id: any) {
+    this.spinnerLoading = true
+    this.taskService.deleteTask(id).pipe(finalize(() => {
+      this.spinnerLoading = false;
+    }), catchError((err) => {
+      this.setErroMessage(err);
+      return throwError(() => err);
+    })).subscribe({
+      next: (data) => {
+        let index = this.taskList.findIndex((task) => task.id === id);
+        if (index < 0) return;
+        this.taskList.splice(index, 1);
+      },
+      error: (err) => {
+        console.log(err);
+      }
 
-  handleCreateTask(task: Task) {
-    this.taskService.createTask(task).subscribe((result) => {
-      console.log("result ", result);
     })
   }
 
-  
- 
+  handleUpdateTask({id, value} : {id: string, value: Task}) {
+    this.spinnerLoading = true;
+    this.taskService.updateTask(id, value).pipe(finalize(() => {
+      this.spinnerLoading = false;
+    }), catchError((err) => {
+      this.setErroMessage(err);
+      return throwError(() => err);
+    })).subscribe({
+      next: (data) => {
+        let index = this.taskList.findIndex((task) => task.id === id);
+        if (index < 0) return;
+        this.taskList[index].assignedTo = data.assignedTo;
+        this.taskList[index].description = data.description;
+        this.taskList[index].title = data.title;
+        this.taskList[index].createdAt = data.createdAt;
+        this.taskList[index].priority = data.priority;
+        this.taskList[index].status = data.status;
+      },
+      error: (err) => {
+        console.log(err);
+      }
+    });
+  }
 
+  handleCreateTask(task: Task) {
+    this.taskService.createTask(task).pipe(catchError((err) => {
+      this.setErroMessage(err);
+      return throwError(() => err);
+    })).subscribe({
+      next: (data) => {
+        this.fetchAllTask();
+      },
+      error: (err) => {
+        console.log(err);
+      }
+    })
+  }
 
-  
+  setErroMessage(err: HttpErrorResponse) {
+    if(err.error.error === 'Permission denied') {
+      this.errorMessage = 'You do not have permission to perform the action';
+    }
+    else {
+      this.errorMessage = err.message;
+    }
+
+    setTimeout(() => {
+      this.errorMessage = '';
+    }, 3000)
+  }
 }
